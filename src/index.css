@@ -10,10 +10,108 @@ html, body, #root {
   overflow: hidden;
   background: #000000;
   cursor: crosshair;
+  font-family: 'Space Mono', monospace;
 }
 
 canvas {
   display: block;
   width: 100% !important;
   height: 100% !important;
+}
+
+/* App Layout Container */
+.app-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000000;
+}
+
+/* Premium Vignette Overlay */
+.vignette-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.85) 100%);
+  transition: opacity 2s ease-in-out;
+}
+
+/* Premium UI Typography Overlay */
+.ui-overlay {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  pointer-events: none; /* Let hover events pass through to the Canvas! */
+  user-select: none;
+  width: 100%;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+/* Title Styling */
+.ui-overlay .title {
+  font-family: 'Syncopate', sans-serif;
+  font-weight: 700;
+  font-size: clamp(3.5rem, 8.5vw, 4.8rem); /* Significantly increased mobile size for prominent visual weight */
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  line-height: 1.0;
+  letter-spacing: 0.38em;
+  text-indent: 0.38em; /* Exact alignment compensation */
+  text-transform: uppercase;
+  
+  /* Refined high-end dimensional light bleed */
+  text-shadow: 
+    0 0 12px rgba(255, 255, 255, 0.18),
+    0 0 30px rgba(255, 102, 0, 0.28),
+    0 0 60px rgba(255, 102, 0, 0.1);
+
+  /* Animation (Delayed by 0.8s for clean initial page reveal) */
+  opacity: 0;
+  animation: premiumFadeUp 2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+}
+
+/* Subtitle / Credit Styling */
+.ui-overlay .subtitle {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-size: clamp(0.78rem, 2vw, 0.88rem); /* Increased size for mobile readability */
+  color: rgba(255, 255, 255, 0.45);
+  margin: 12px 0 0 0; /* Placed close to the title with perfect breathing room */
+  padding: 0;
+  line-height: 1.0;
+  letter-spacing: 0.48em;
+  text-indent: 0.48em; /* Exact alignment compensation */
+  word-spacing: 0.38em; /* Premium space between words */
+  text-transform: uppercase;
+  
+  /* Micro-shadow for legibility */
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+
+  /* Animation (Delayed by 1.2s to build a sequenced reveal after the title) */
+  opacity: 0;
+  animation: premiumFadeUp 2.4s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+}
+
+/* Fade Up + Cinematic Blur Entrance keyframes */
+@keyframes premiumFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }

@@ -22,9 +22,9 @@ const RH          = RISE_HEIGHT.toFixed(2)
 // when map/normalMap etc. are set. We use 'uv' attribute from BoxGeometry.
 function makeMaterial() {
   const mat = new THREE.MeshStandardMaterial({
-    color: 0x000000,
-    metalness: 0.9,
-    roughness: 0.1,
+    color: 0x444444,
+    metalness: 0.8,
+    roughness: 0.2,
   })
 
   mat.onBeforeCompile = (shader) => {
@@ -59,12 +59,13 @@ varying vec2  v_uv;`
       .replace(
         '#include <opaque_fragment>',
         `{
-  // Procedural edge glow — circuit trace on cube face edges
+  // Procedural edge — circuit trace on cube face edges
   float edge = step(0.86, max(abs(v_uv.x - 0.5), abs(v_uv.y - 0.5)) * 2.0);
   float t    = clamp(v_dynY / ${RH}, 0.0, 1.0);
   float I    = pow(t, 2.0) * edge;
+  // Mix color to keep outline but remove the excessive additive glow
   // #FF6600 = rgb(1.0, 0.4, 0.0)
-  outgoingLight += vec3(1.0, 0.4, 0.0) * I * 5.0;
+  outgoingLight = mix(outgoingLight, vec3(1.0, 0.4, 0.0), I);
 }
 #include <opaque_fragment>`
       )
@@ -148,6 +149,8 @@ export default function InstancedGrid() {
 
     const hit = pointerHit.current
 
+    activeSet.current.forEach((i) => { targetOffsets[i] = 0 })
+
     if (hit) {
       const cc    = Math.floor((hit.x + HALF_GRID) / SPACING)
       const cr    = Math.floor((hit.z + HALF_GRID) / SPACING)
@@ -166,8 +169,6 @@ export default function InstancedGrid() {
           }
         }
       }
-    } else {
-      activeSet.current.forEach((i) => { targetOffsets[i] = 0 })
     }
 
     const toRemove = []
